@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1766663442167,
+      "tag": "0000_bent_proteus",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1766663736794,
+      "tag": "0001_wakeful_forge",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766668505801,
+      "tag": "0002_panoramic_kate_bishop",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1766673143686,
+      "tag": "0003_familiar_triathlon",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1766673894188,
+      "tag": "0004_light_moon_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1766694752852,
+      "tag": "0005_luxuriant_wolf_cub",
+      "breakpoints": true
+    }
+  ]
+}

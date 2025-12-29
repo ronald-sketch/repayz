@@ -1,0 +1,23 @@
+# robots.txt for repayz.nl
+# Optimized for search engine crawling
+
+# Allow all search engines to crawl the site
+User-agent: *
+Allow: /
+
+# Block admin and debug pages from indexing
+Disallow: /admin
+Disallow: /api-debug
+Disallow: /404
+
+# Block API endpoints from crawling
+Disallow: /api/
+
+# Crawl-delay for polite crawling (optional, respected by some bots)
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://repayz.nl/sitemap.xml
+
+# Additional sitemaps for images (if applicable)
+# Sitemap: https://repayz.nl/sitemap-images.xml

@@ -1,0 +1,2 @@
+ALTER TABLE `machine_status` MODIFY COLUMN `status` enum('operational','error','door_open','maintenance','offline','full') NOT NULL DEFAULT 'operational';--> statement-breakpoint
+ALTER TABLE `machine_status` ADD `statusInfoState` varchar(50) DEFAULT '';

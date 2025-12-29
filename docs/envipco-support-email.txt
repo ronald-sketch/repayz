@@ -1,0 +1,33 @@
+To: eportal@envipco.us
+
+Subject: Request for Push Notification Permissions - RVM 090373
+
+---
+
+Dear Envipco Support Team,
+
+I am using ePortal to monitor my Quantum RVM (ID: 090373) at site 650147 (CanControl, Oisterwijk, Netherlands).
+
+I would like to configure REST API push notifications (webhooks) to receive real-time receipt data (Event 40010) for my application. However, when I access Event administration in my account, I receive the message:
+
+"You have no permissions to read push notifications"
+"No RVMs are associated with this account"
+
+My request:
+1. Please enable push notification permissions for my account
+2. Please associate RVM 090373 (Site 650147) with my account for event administration
+
+Account details:
+- Username: ronald@cancontrol.eu
+- RVM ID: 090373
+- Site ID: 650147
+- Store Name: CanControl
+
+Once enabled, I plan to configure a webhook endpoint to receive Event 40010 (Receipt data pushed) for gamification purposes in my recycling application.
+
+Thank you for your assistance.
+
+Best regards,
+Ronald
+CanControl
+ronald@cancontrol.eu

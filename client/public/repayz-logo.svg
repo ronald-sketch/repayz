@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <!-- White background -->
+  <rect width="200" height="60" fill="#ffffff"/>
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4db8a8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a3a52;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Recycling icon -->
+  <g transform="translate(5, 10)">
+    <path d="M20 5L25 12L15 12Z" fill="#4db8a8"/>
+    <path d="M25 12L30 19L20 19Z" fill="#4db8a8" opacity="0.8"/>
+    <path d="M10 19L20 19L15 12Z" fill="#4db8a8" opacity="0.6"/>
+    <circle cx="20" cy="20" r="15" stroke="#4db8a8" stroke-width="2" fill="none"/>
+    <path d="M12 15L20 8L28 15M28 25L20 32L12 25" stroke="#4db8a8" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- REPAYZ text -->
+  <text x="55" y="38" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#1a3a52">
+    REPAYZ
+  </text>
+  <!-- Tagline -->
+  <text x="55" y="52" font-family="Arial, sans-serif" font-size="8" fill="#4db8a8">
+    Recycle, Get Paid, Zero Waste
+  </text>
+</svg>

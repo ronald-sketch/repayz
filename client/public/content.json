@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "title": "Recycle, Get Payed, Zero Waste.",
+    "subtitle": "Duurzaam Recyclen",
+    "description": "Recycle makkelijk statiegeld flessen en blikjes bij REPAYZ Oisterwijk. Tot 120 items per minuut! Ontvang CASH via Tikkie of steun Sociaal Huis Oisterwijk.",
+    "imageUrl": ""
+  },
+  "logo": {
+    "url": "/logo.svg",
+    "offsetX": 0,
+    "offsetY": 0,
+    "width": 200,
+    "height": 100
+  },
+  "settings": {
+    "whatsappNumber": "+31 6 12345678",
+    "openingHoursStart": "10:00",
+    "openingHoursEnd": "21:00",
+    "locationCity": "Oisterwijk",
+    "locationCountry": "Netherlands"
+  },
+  "machine": {
+    "status": "Operationeel",
+    "bottlesCount": 111,
+    "cansCount": 61
+  },
+  "welfare": {
+    "title": "Sociaal Huis Oisterwijk",
+    "description": "Doneer je opbrengsten - het gaat 100% naar Stichting Sociaal Huis Oisterwijk."
+  },
+  "payment": {
+    "description": "Ontvang je verdiensten direct op je bankrekening via de Tikkie app of doneer aan lokale welzijnsorganisaties."
+  }
+}
