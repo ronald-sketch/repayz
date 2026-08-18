@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, CONTACT, OPENING_HOURS } from "@shared/facts";
 import { CheckCircle2, ExternalLink, ArrowRight, Zap, Heart } from "lucide-react";
 import { Link } from "wouter";
 import { Helmet } from "react-helmet-async";
@@ -16,7 +17,7 @@ export default function StatiegeldNederland() {
     "description": "REPAYZ is een officieel erkend statiegeld innamepunt van Statiegeld Nederland en Verpact. De snelste bulkmachine van Nederland met 120 items per minuut.",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Sprendlingenstraat 20B",
+      "streetAddress": ADDRESS.street,
       "addressLocality": "Oisterwijk",
       "postalCode": "5061 KN",
       "addressCountry": "NL"
@@ -27,13 +28,15 @@ export default function StatiegeldNederland() {
       "longitude": 5.1889
     },
     "url": "https://repayz.nl/statiegeld-nederland",
-    "telephone": "+31-6-12345678",
+    // telephone weggelaten zolang CONTACT.telephone niet bevestigd is;
+    // hier stond een verzonnen nummer in gepubliceerde JSON-LD.
+    ...(CONTACT.telephone ? { telephone: CONTACT.telephone } : {}),
     "openingHoursSpecification": [
       {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-        "opens": "10:00",
-        "closes": "18:00"
+        "dayOfWeek": OPENING_HOURS.schemaDays,
+        "opens": OPENING_HOURS.opens,
+        "closes": OPENING_HOURS.closes
       },
       {
         "@type": "OpeningHoursSpecification",

@@ -1,3 +1,4 @@
+import { ADDRESS, OPENING_HOURS, SCOOTERPOINT } from "@shared/facts";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import Header from "@/components/Header";
@@ -52,12 +53,12 @@ const faqs: FAQItem[] = [
   {
     category: "Locatie & Openingstijden",
     question: "Waar staat de REPAYZ machine?",
-    answer: "De REPAYZ machine staat bij Scooterpoint Oisterwijk, Sprendlingenstraat 20B, 5061 JX Oisterwijk. Er is gratis parkeergelegenheid direct voor de deur."
+    answer: `De REPAYZ machine staat bij ${SCOOTERPOINT.name} Oisterwijk, ${ADDRESS.full}. Er is gratis parkeergelegenheid direct voor de deur.`
   },
   {
     category: "Locatie & Openingstijden",
     question: "Wat zijn de openingstijden?",
-    answer: "We zijn dagelijks geopend van 10:00 tot 21:00 uur, 7 dagen per week. Ook op feestdagen!"
+    answer: `We zijn dagelijks geopend van ${OPENING_HOURS.opens} tot ${OPENING_HOURS.closes} uur, 7 dagen per week. Ook op feestdagen!`
   },
   {
     category: "Locatie & Openingstijden",

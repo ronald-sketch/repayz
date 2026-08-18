@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, OPENING_HOURS } from "@shared/facts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEOHead } from "@/components/SEOHead";
@@ -40,7 +41,7 @@ export default function AlgemeneVoorwaarden() {
             <p className="text-gray-600 dark:text-gray-300">
               Deze algemene voorwaarden zijn van toepassing op het gebruik van de REPAYZ 
               statiegeld inlevermachine en bijbehorende diensten, gevestigd aan de 
-              Sprendlingenstraat 20B, 5061 KN Oisterwijk.
+              {ADDRESS.full}.
             </p>
             <p className="text-gray-600 dark:text-gray-300">
               Door gebruik te maken van onze diensten, gaat u akkoord met deze voorwaarden.
@@ -118,7 +119,7 @@ export default function AlgemeneVoorwaarden() {
             </p>
             <div className="mt-4 p-4 bg-[#4db8a8]/10 rounded-lg">
               <p className="text-gray-700 dark:text-gray-200 m-0">
-                <strong>Dagelijks:</strong> 10:00 - 21:00
+                <strong>Dagelijks:</strong> {OPENING_HOURS.range}
               </p>
             </div>
             <p className="text-gray-600 dark:text-gray-300 mt-4">
@@ -170,7 +171,7 @@ export default function AlgemeneVoorwaarden() {
             <div className="mt-4 p-4 bg-[#4db8a8]/10 rounded-lg">
               <p className="text-gray-700 dark:text-gray-200 m-0">
                 <strong>REPAYZ</strong><br />
-                Sprendlingenstraat 20B<br />
+                {ADDRESS.street}<br />
                 5061 KN Oisterwijk<br />
                 E-mail: <a href="mailto:info@repayz.nl" className="text-[#4db8a8] hover:underline">info@repayz.nl</a>
               </p>

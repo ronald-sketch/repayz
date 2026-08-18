@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, CONTACT } from "@shared/facts";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -67,8 +68,8 @@ export default function Contact() {
             <CardContent>
               <p className="text-gray-600 dark:text-gray-300 mb-4">Stuur ons een email</p>
               <Button asChild variant="outline" className="w-full border-[#4db8a8] text-[#4db8a8] hover:bg-[#4db8a8] hover:text-white">
-                <a href="mailto:adapter-catalogus.2q@icloud.com">
-                  info@repayz.nl
+                <a href={`mailto:${CONTACT.email}`}>
+                  {CONTACT.email}
                 </a>
               </Button>
             </CardContent>
@@ -83,7 +84,7 @@ export default function Contact() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 dark:text-gray-300 mb-2">Sprendlingenstraat 20B</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-2">{ADDRESS.street}</p>
               <p className="text-gray-600 dark:text-gray-300 mb-4">5061 KN Oisterwijk</p>
               <p className="text-sm text-[#4db8a8] dark:text-[#4db8a8] font-semibold">
                 Binnenkort open

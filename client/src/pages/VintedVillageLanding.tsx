@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, OPENING_HOURS } from "@shared/facts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, Clock, ArrowRight, Navigation, Package, ParkingCircle } from "lucide-react";
@@ -35,7 +36,7 @@ export default function VintedVillageLanding({ village }: VintedVillageLandingPr
     },
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Sprendlingenstraat 20B",
+      "streetAddress": ADDRESS.street,
       "addressLocality": "Oisterwijk",
       "postalCode": "5061 KN",
       "addressCountry": "NL"
@@ -46,7 +47,7 @@ export default function VintedVillageLanding({ village }: VintedVillageLandingPr
     <div className="min-h-screen bg-white dark:bg-[#0d1f2d] transition-colors">
       <SEOHead 
         title={`Vinted Go Locker ${village.name} | REPAYZ Oisterwijk`}
-        description={`Vinted Go Locker in ${village.name}? Verstuur en ontvang je Vinted pakketten bij REPAYZ in Oisterwijk, op slechts ${village.driveTime} rijden. Dagelijks open 10:00-21:00.`}
+        description={`Vinted Go Locker in ${village.name}? Verstuur en ontvang je Vinted pakketten bij REPAYZ in Oisterwijk, op slechts ${village.driveTime} rijden. Dagelijks open ${OPENING_HOURS.range}.`}
         keywords={`Vinted Go Locker ${village.name}, Vinted ${village.name}, Vinted pakketpunt ${village.name}, tweedehands kleding ${village.name}`}
         ogTitle={`Vinted Go Locker ${village.name} | REPAYZ`}
         ogDescription={`Vinted Go Locker bij REPAYZ Oisterwijk - makkelijk bereikbaar met gratis parkeren. Slechts ${village.driveTime} vanaf ${village.name}.`}
@@ -124,7 +125,7 @@ export default function VintedVillageLanding({ village }: VintedVillageLandingPr
               <CardContent className="p-6">
                 <MapPin className="w-12 h-12 text-purple-600 mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-[#1a3a52] dark:text-white mb-2">Adres</h3>
-                <p className="text-lg font-semibold text-[#1a3a52] dark:text-white">Sprendlingenstraat 20B</p>
+                <p className="text-lg font-semibold text-[#1a3a52] dark:text-white">{ADDRESS.street}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">5061 KN Oisterwijk</p>
               </CardContent>
             </Card>
@@ -226,7 +227,7 @@ export default function VintedVillageLanding({ village }: VintedVillageLandingPr
                 </div>
                 <h3 className="text-xl font-bold text-[#1a3a52] dark:text-white mb-3">Dagelijks Open</h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  10:00 - 21:00 uur, 7 dagen per week. Altijd tijd om je pakket op te halen!
+                  {OPENING_HOURS.range} uur, 7 dagen per week. Altijd tijd om je pakket op te halen!
                 </p>
               </CardContent>
             </Card>
