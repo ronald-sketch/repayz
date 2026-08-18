@@ -1,3 +1,5 @@
+import { OPENING_HOURS } from "@shared/facts";
+
 interface FAQ {
   question: string;
   answer: string;
@@ -49,7 +51,7 @@ export const villageFAQs: VillageFAQs = {
     },
     {
       question: "Moet ik een afspraak maken?",
-      answer: "Nee, gewoon langskomen tijdens openingstijden (di-za 10:00-18:00). Geen wachtrij, geen reservering nodig. Onze bulkmachine is supersnel dus je bent zo klaar!"
+      answer: `Nee, gewoon langskomen tijdens openingstijden (${OPENING_HOURS.daily}, zeven dagen per week). Geen wachtrij, geen reservering nodig. Onze bulkmachine is supersnel dus je bent zo klaar!`
     }
   ],
 
@@ -109,7 +111,7 @@ export const villageFAQs: VillageFAQs = {
     },
     {
       question: "Zijn de openingstijden ook in het weekend?",
-      answer: "Ja, we zijn open op zaterdag van 10:00-18:00. Zondag en maandag zijn we gesloten. Dinsdag t/m zaterdag: 10:00-18:00."
+      answer: `Ja, we zijn ook in het weekend open. De machine is ${OPENING_HOURS.daily} beschikbaar, zeven dagen per week — zaterdag en zondag dus net zo goed als doordeweeks.`
     }
   ],
 
