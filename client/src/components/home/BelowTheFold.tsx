@@ -5,6 +5,7 @@ import { MapPin, Clock, Heart, TrendingUp, Leaf, Mail, ArrowRight, AlertCircle, 
 import { Link } from "wouter";
 import Footer from "@/components/Footer";
 import { useOpeningHours } from "@/hooks/useOpeningHours";
+import { OPENING_HOURS, SCOOTERPOINT } from "@shared/facts";
 
 interface BelowTheFoldProps {
   totalCollected: number;
@@ -275,8 +276,8 @@ export default function BelowTheFold({
                   </p>
                   <div className="bg-gray-50 dark:bg-[#1a3a52] p-3 rounded-lg">
                     <p className="text-xs text-gray-500 dark:text-gray-500 mb-1">Openingstijden</p>
-                    <p className="text-sm font-semibold text-[#1a3a52] dark:text-white">Di-Za: 10:00 - 18:00</p>
-                    <p className="text-sm font-semibold text-[#1a3a52] dark:text-white">Ma & Zo: Gesloten</p>
+                    <p className="text-sm font-semibold text-[#1a3a52] dark:text-white">{SCOOTERPOINT.daysLabelShort}: {SCOOTERPOINT.range}</p>
+                    <p className="text-sm font-semibold text-[#1a3a52] dark:text-white">Ma &amp; Zo: Gesloten</p>
                   </div>
                 </CardContent>
               </Card>
@@ -305,7 +306,7 @@ export default function BelowTheFold({
                   <Clock className="w-5 h-5 text-purple-600 dark:text-purple-400 mt-1" />
                   <div>
                     <p className="font-semibold text-[#1a3a52] dark:text-white">Openingstijden</p>
-                    <p className="text-gray-600 dark:text-gray-300">Dagelijks van 10:00 tot 21:00</p>
+                    <p className="text-gray-600 dark:text-gray-300">Dagelijks van {OPENING_HOURS.opens} tot {OPENING_HOURS.closes}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

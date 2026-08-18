@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, GEO, OPENING_HOURS } from "@shared/facts";
 import { useEffect } from 'react';
 
 interface SchemaOrgProps {
@@ -18,7 +19,7 @@ export default function SchemaOrg({
   type, 
   villageName, 
   address,
-  openingHours = "Mo-Su 10:00-21:00",
+  openingHours = OPENING_HOURS.schema,
   isVinted = false
 }: SchemaOrgProps) {
   useEffect(() => {
@@ -80,26 +81,26 @@ export default function SchemaOrg({
               "addressCountry": address.country || "NL"
             } : {
               "@type": "PostalAddress",
-              "streetAddress": "Sprendlingenstraat 20B",
-              "addressLocality": "Oisterwijk",
-              "postalCode": "5061 KE",
-              "addressCountry": "NL"
+              "streetAddress": ADDRESS.street,
+              "addressLocality": ADDRESS.city,
+              "postalCode": ADDRESS.postalCode,
+              "addressCountry": ADDRESS.country
             },
             "geo": {
               "@type": "GeoCoordinates",
-              "latitude": 51.5783,
-              "longitude": 5.1897
+              "latitude": GEO.latitude,
+              "longitude": GEO.longitude
             },
             "openingHoursSpecification": [
               {
                 "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                "opens": "10:00",
-                "closes": "21:00"
+                "dayOfWeek": OPENING_HOURS.schemaDays,
+                "opens": OPENING_HOURS.opens,
+                "closes": OPENING_HOURS.closes
               }
             ],
             "openingHours": openingHours,
-            "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address?.street || 'Sprendlingenstraat 20B')}+${encodeURIComponent(address?.city || 'Oisterwijk')}`,
+            "hasMap": `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address?.street || ADDRESS.street)}+${encodeURIComponent(address?.city || ADDRESS.city)}`,
             "areaServed": {
               "@type": "City",
               "name": villageName || "Oisterwijk"
@@ -122,10 +123,10 @@ export default function SchemaOrg({
             "addressCountry": address.country || "NL"
           } : {
             "@type": "PostalAddress",
-            "streetAddress": "Sprendlingenstraat 20B",
-            "addressLocality": "Oisterwijk",
-            "postalCode": "5061 KE",
-            "addressCountry": "NL"
+            "streetAddress": ADDRESS.street,
+            "addressLocality": ADDRESS.city,
+            "postalCode": ADDRESS.postalCode,
+            "addressCountry": ADDRESS.country
           }
         });
       }

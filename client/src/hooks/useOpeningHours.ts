@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
+import { OPENING_HOURS } from '@shared/facts';
 
-const OPENING_HOUR = 10; // 10:00
-const CLOSING_HOUR = 21; // 21:00
+const OPENING_HOUR = OPENING_HOURS.openHour;
+const CLOSING_HOUR = OPENING_HOURS.closeHour;
 const CLOSING_SOON_MINUTES = 30; // Last 30 minutes before closing
 
 interface OpeningHoursState {
   isOpen: boolean;
   isClosingSoon: boolean;
   timeUntilClose: string; // "2 uur 30 min" or "15:32" for countdown
-  timeUntilOpen: string; // "om 10:00"
+  timeUntilOpen: string; // "om 07:00"
   statusText: string; // Full status text
   statusColor: string; // Tailwind color class
 }
@@ -30,7 +31,7 @@ export function useOpeningHours(): OpeningHoursState {
     const currentMinute = now.getMinutes();
     const currentSecond = now.getSeconds();
     
-    // Check if currently open (10:00 - 21:00)
+    // Check if currently open (zie OPENING_HOURS in shared/facts.ts)
     const isOpen = currentHour >= OPENING_HOUR && currentHour < CLOSING_HOUR;
     
     // Calculate time until closing (in Amsterdam time)
@@ -65,7 +66,7 @@ export function useOpeningHours(): OpeningHoursState {
     }
     
     // Calculate time until opening (for when closed)
-    let timeUntilOpen = 'om 10:00';
+    let timeUntilOpen = `om ${OPENING_HOURS.opens}`;
     
     // Generate status text
     let statusText = '';
