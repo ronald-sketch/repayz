@@ -8,7 +8,7 @@ const CLOSING_SOON_MINUTES = 30; // Last 30 minutes before closing
 interface OpeningHoursState {
   isOpen: boolean;
   isClosingSoon: boolean;
-  timeUntilClose: string; // "2 uur 30 min" or "15:32" for countdown
+  timeUntilClose: string; // "2 uur 30 min", of "mm:ss" als aftelling
   timeUntilOpen: string; // "om 07:00"
   statusText: string; // Full status text
   statusColor: string; // Tailwind color class

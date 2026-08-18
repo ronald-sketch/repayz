@@ -37,12 +37,6 @@ export default function StatiegeldNederland() {
         "dayOfWeek": OPENING_HOURS.schemaDays,
         "opens": OPENING_HOURS.opens,
         "closes": OPENING_HOURS.closes
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Sunday"],
-        "opens": "00:00",
-        "closes": "00:00"
       }
     ],
     "memberOf": [
