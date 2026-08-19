@@ -96,7 +96,9 @@ done
 
 # ================================================================== 4. H1 en server-content
 kop "4. Er staat inhoud in de HTML, niet alleen een leeg React-omhulsel"
-for r in / /locatie /statiegeld-udenhout /en-tilburg; do
+# De nieuwe taalwortels horen hier expliciet bij: /ro, /bg en /ua zijn nieuw
+# aangemaakt en moeten net zo goed inhoud in de bron hebben.
+for r in / /locatie /statiegeld-udenhout /en /ro /bg /ua; do
   html="$(haal "${BASIS}${r}")"
   h1="$(grep -o '<h1[^>]*>' <<<"$html" | head -1)"
   if [ -n "$h1" ]; then groen "$r heeft een H1 in de bron"; else rood "$r H1" "een <h1> in de HTML" "geen"; fi
@@ -104,7 +106,7 @@ done
 
 # ================================================================== 5. taalattribuut
 kop "5. Het lang-attribuut past bij de taal van de pagina"
-declare -A TAAL=( ["/"]="nl" ["/locatie"]="nl" ["/en"]="en" ["/en-tilburg"]="en" ["/pl"]="pl" ["/pl-tilburg"]="pl" ["/ro-boxtel"]="ro" ["/ua-den-bosch"]="uk" )
+declare -A TAAL=( ["/"]="nl" ["/locatie"]="nl" ["/en"]="en" ["/ro"]="ro" ["/pl"]="pl" ["/bg"]="bg" ["/ua"]="uk" )
 for r in "${!TAAL[@]}"; do
   html="$(haal "${BASIS}${r}")"
   l="$(grep -o '<html[^>]*lang="[^"]*"' <<<"$html" | head -1 | grep -o 'lang="[^"]*"' | sed 's/lang="//; s/"//')"
