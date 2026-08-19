@@ -67,12 +67,7 @@ let backboneStatus: BackboneStatus = {
 };
 
 // Lifetime counters cache
-let lifetimeCache: {
-  accumulatedBottles: number;
-  accumulatedCans: number;
-  lastDailyBottles: number;
-  lastDailyCans: number;
-} = {
+let lifetimeCache: LifetimeCache = {
   accumulatedBottles: 0,
   accumulatedCans: 0,
   lastDailyBottles: 0,
@@ -94,11 +89,14 @@ const DEFAULT_MACHINE_ID = '090373';
  * Datum in Amsterdamse tijd, als YYYY-MM-DD.
  *
  * ePortal rekent zijn dagtotalen af op de lokale dag. Hier stond eerder
- * `new Date().toISOString().split('T')[0]`, en dat geeft de UTC-datum. Tussen
- * middernacht en 02:00 Amsterdamse tijd (01:00 in de winter) is dat nog
- * gisteren, dus werd elke nacht een paar uur lang de verkeerde dag opgevraagd.
- * Gevolg: de site toonde in dat venster de cijfers van gisteren als "vandaag",
- * en de middernachtdetectie in updateLifetimeCounters sloeg twee uur te laat aan.
+ * `new Date().toISOString().split('T')[0]`, en dat geeft de UTC-datum.
+ * Nederland loopt in de zomer twee uur voor op UTC en in de winter een uur,
+ * dus vanaf middernacht was de UTC-datum nog een paar uur lang die van
+ * gisteren. Elke nacht werd in dat venster de verkeerde dag opgevraagd.
+ * Gevolg: de site toonde daar de cijfers van gisteren als "vandaag", en de
+ * dagovergang in applyMidnightRollover sloeg te laat aan.
+ *
+ * Het venster staat vastgelegd in server/machineDate.test.ts.
  */
 export function amsterdamDateString(now: Date = new Date()): string {
   return new Intl.DateTimeFormat('en-CA', {
@@ -173,6 +171,65 @@ async function authenticate(): Promise<string | null> {
   }
 }
 
+export interface LifetimeCache {
+  accumulatedBottles: number;
+  accumulatedCans: number;
+  lastDailyBottles: number;
+  lastDailyCans: number;
+  /** Amsterdamse datum van de laatste poll; undefined bij een verse start. */
+  lastPolledDate?: string;
+}
+
+/**
+ * Verwerkt een dagovergang in de levenstellers. Puur, zodat het testbaar is.
+ *
+ * Twee dingen die hier eerder misgingen:
+ *
+ * 1. De conditie was een OR maar hoogde beide tellers op. Zakte alleen het
+ *    flessenaantal, dan werd ook het blikjestotaal van de vorige dag
+ *    opgeteld terwijl dat helemaal niet was gereset. Elke eenzijdige dip
+ *    telde de andere categorie een dag dubbel. Nu wordt elke categorie
+ *    afzonderlijk beoordeeld.
+ *
+ * 2. Er was geen datumcontrole. Elke hapering van de ePortal-API die een
+ *    lager getal opleverde, werd als dagovergang gelezen en permanent
+ *    opgeteld — de teller kan namelijk alleen omhoog. Nu telt een daling
+ *    alleen als de Amsterdamse datum sinds de vorige poll is veranderd.
+ *
+ * Bij een verse start is lastPolledDate onbekend. Dan valt de functie terug
+ * op het oude gedrag van vergelijken op waarde, want de cache is dan net uit
+ * de database geladen en kan van gisteren zijn.
+ */
+export function applyMidnightRollover(
+  cache: LifetimeCache,
+  todayBottles: number,
+  todayCans: number,
+  vandaag: string
+): { cache: LifetimeCache; rolloverToegepast: boolean } {
+  const datumVeranderd =
+    cache.lastPolledDate === undefined || cache.lastPolledDate !== vandaag;
+
+  let rolloverToegepast = false;
+  const bijgewerkt: LifetimeCache = { ...cache };
+
+  if (datumVeranderd) {
+    if (todayBottles < cache.lastDailyBottles) {
+      bijgewerkt.accumulatedBottles += cache.lastDailyBottles;
+      rolloverToegepast = true;
+    }
+    if (todayCans < cache.lastDailyCans) {
+      bijgewerkt.accumulatedCans += cache.lastDailyCans;
+      rolloverToegepast = true;
+    }
+  }
+
+  bijgewerkt.lastDailyBottles = todayBottles;
+  bijgewerkt.lastDailyCans = todayCans;
+  bijgewerkt.lastPolledDate = vandaag;
+
+  return { cache: bijgewerkt, rolloverToegepast };
+}
+
 /**
  * Update lifetime counters based on daily values
  * Called on every poll to track accumulated totals
@@ -182,21 +239,20 @@ async function updateLifetimeCounters(machineId: string, todayBottles: number, t
     const db = await getDb();
     if (!db) return;
 
-    // Check if we need to detect a midnight reset
-    // If today's values are lower than last known, it means midnight reset happened
-    if (todayBottles < lifetimeCache.lastDailyBottles || todayCans < lifetimeCache.lastDailyCans) {
-      // Midnight reset detected - add the last known values to accumulated
-      lifetimeCache.accumulatedBottles += lifetimeCache.lastDailyBottles;
-      lifetimeCache.accumulatedCans += lifetimeCache.lastDailyCans;
-      console.log('[Backbone] 🌙 Midnight reset detected, accumulated:', {
+    const { cache: bijgewerkt, rolloverToegepast } = applyMidnightRollover(
+      lifetimeCache,
+      todayBottles,
+      todayCans,
+      amsterdamDateString()
+    );
+    lifetimeCache = bijgewerkt;
+
+    if (rolloverToegepast) {
+      console.log('[Backbone] 🌙 Dagovergang verwerkt, geaccumuleerd:', {
         bottles: lifetimeCache.accumulatedBottles,
         cans: lifetimeCache.accumulatedCans
       });
     }
-
-    // Update last known daily values
-    lifetimeCache.lastDailyBottles = todayBottles;
-    lifetimeCache.lastDailyCans = todayCans;
 
     // Save to database
     await db.insert(lifetimeCounters).values({
