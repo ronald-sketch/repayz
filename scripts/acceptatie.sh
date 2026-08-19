@@ -69,8 +69,15 @@ for r in $ROUTES_NL $ROUTES_INT; do
   html="$(haal "${BASIS}${r}")"
   can="$(grep -o '<link[^>]*rel="canonical"[^>]*>' <<<"$html" | head -1 | grep -o 'href="[^"]*"' | sed 's/href="//; s/"//')"
   verwacht="${BASIS}${r}"
-  [ "$r" = "/" ] && verwacht="${BASIS}/"
-  if [ "$can" = "$verwacht" ]; then
+  # De homepage mag met of zonder afsluitende slash: https://host en https://host/
+  # zijn dezelfde URL en worden door elke client en door Google genormaliseerd.
+  if [ "$r" = "/" ]; then
+    if [ "$can" = "${BASIS}/" ] || [ "$can" = "${BASIS}" ]; then
+      groen "$r (canonical: $can)"
+    else
+      rood "$r canonical" "${BASIS}/ of ${BASIS}" "${can:-ONTBREEKT}"
+    fi
+  elif [ "$can" = "$verwacht" ]; then
     groen "$r"
   else
     rood "$r canonical" "$verwacht" "${can:-ONTBREEKT}"
@@ -157,8 +164,17 @@ done
 # ================================================================== 9. interne links
 kop "9. De landingspagina's zijn intern gelinkt in de HTML"
 html="$(haal "${BASIS}/")"
-n="$(grep -o 'href="/statiegeld-[a-z-]*"' <<<"$html" | sort -u | wc -l | tr -d ' ')"
-if [ "$n" -ge 5 ]; then groen "homepage linkt naar $n dorpspagina's"; else rood "interne links vanaf de homepage" "minstens 5" "$n"; fi
+# /statiegeld-inleveren en /statiegeld-nederland zijn kernpaginas, geen dorpspaginas.
+dorpen="$(grep -o 'href="/statiegeld-[a-z-]*"' <<<"$html" \
+  | sed 's/href="//; s/"//' \
+  | grep -vE '^/statiegeld-(inleveren|nederland|wiki)$' \
+  | sort -u)"
+n="$(printf '%s' "$dorpen" | grep -c . || true)"
+if [ "$n" -ge 3 ]; then
+  groen "homepage linkt naar $n dorpspagina's: $(printf '%s' "$dorpen" | tr '\n' ' ')"
+else
+  rood "echte dorpslinks vanaf de homepage" "minstens 3" "$n ($(printf '%s' "$dorpen" | tr '\n' ' '))"
+fi
 
 # ================================================================== 10. sitemap
 kop "10. De sitemap is actueel"
@@ -175,6 +191,33 @@ if [ -n "$nieuwste" ]; then
     rood "sitemap lastmod" "niet ouder dan $grens" "$nieuwste"
   fi
 fi
+
+kop "11. Elke URL in de sitemap bestaat ook echt"
+# Dit vangt het geval dat er dode URL's aan Google worden gevoed. Bij meer dan
+# 40 URL's wordt er een steekproef genomen, anders duurt de test te lang.
+# De sitemap bevat absolute productie-URL's. Draai je tegen een testomgeving,
+# dan wordt de host omgezet naar BASIS, zodat dezelfde paden daar worden getoetst.
+mapped="$(grep -o '<loc>[^<]*' <<<"$sm" | sed 's/<loc>//' \
+  | sed -E "s#^https?://[^/]+#${BASIS}#")"
+totaal="$(printf '%s' "$mapped" | grep -c . || true)"
+if [ "$totaal" -gt 40 ]; then
+  # elke n-de URL, zodat de steekproef over de hele sitemap verdeeld is
+  stap=$(( totaal / 30 + 1 ))
+  steek="$(printf '%s\n' "$mapped" | awk -v s="$stap" 'NR % s == 1')"
+  echo "  (steekproef: elke ${stap}e van $totaal URL's)"
+else
+  steek="$mapped"
+fi
+dood=0
+while IFS= read -r u; do
+  [ -z "$u" ] && continue
+  c="$(code "$u")"
+  if [ "$c" != "200" ]; then
+    rood "sitemap-URL $u" "200" "$c"
+    dood=$((dood+1))
+  fi
+done <<<"$steek"
+[ "$dood" -eq 0 ] && groen "alle gecontroleerde sitemap-URL's geven 200"
 
 # ================================================================== uitkomst
 echo
