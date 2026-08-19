@@ -110,7 +110,7 @@ for r in $ROUTES_INT; do
 done
 
 echo "  -- wederkerigheid --"
-for r in /en-tilburg /pl-tilburg /ro-boxtel; do
+for r in /en /pl /en-tilburg /pl-tilburg /ro-boxtel; do
   html="$(haal "${BASIS}${r}")"
   zelf="${BASIS}${r}"
   # verwijst de pagina naar zichzelf?
@@ -130,6 +130,29 @@ for r in /en-tilburg /pl-tilburg /ro-boxtel; do
     fi
   fi
 done
+
+echo "  -- verwijzen de hreflang-tags naar bestaande pagina's? --"
+gecontroleerd=""
+dood=0
+for r in $ROUTES_INT; do
+  html="$(haal "${BASIS}${r}")"
+  doelen="$(grep -o 'hreflang="[^"]*"[^>]*href="[^"]*"' <<<"$html" \
+    | grep -o 'href="[^"]*"' | sed 's/href="//; s/"//' | sort -u)"
+  while IFS= read -r d; do
+    [ -z "$d" ] && continue
+    case " $gecontroleerd " in *" $d "*) continue ;; esac
+    gecontroleerd="$gecontroleerd $d"
+    c="$(code "$d")"
+    if [ "$c" != "200" ]; then
+      rood "hreflang-doel $d (genoemd op $r)" "200" "$c"
+      dood=$((dood+1))
+    fi
+  done <<<"$doelen"
+done
+if [ "$dood" -eq 0 ]; then
+  aantal="$(printf '%s' "$gecontroleerd" | wc -w | tr -d ' ')"
+  groen "alle $aantal unieke hreflang-doelen geven 200"
+fi
 
 # ================================================================== 7. bedrijfsfeiten
 kop "7. De bedrijfsfeiten kloppen en er staat geen verboden variant in"
