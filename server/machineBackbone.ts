@@ -90,6 +90,25 @@ const EPORTAL_BASE_URL = 'https://eportal.envipco.com/api';
 // Default machine ID
 const DEFAULT_MACHINE_ID = '090373';
 
+/**
+ * Datum in Amsterdamse tijd, als YYYY-MM-DD.
+ *
+ * ePortal rekent zijn dagtotalen af op de lokale dag. Hier stond eerder
+ * `new Date().toISOString().split('T')[0]`, en dat geeft de UTC-datum. Tussen
+ * middernacht en 02:00 Amsterdamse tijd (01:00 in de winter) is dat nog
+ * gisteren, dus werd elke nacht een paar uur lang de verkeerde dag opgevraagd.
+ * Gevolg: de site toonde in dat venster de cijfers van gisteren als "vandaag",
+ * en de middernachtdetectie in updateLifetimeCounters sloeg twee uur te laat aan.
+ */
+export function amsterdamDateString(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Amsterdam',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now);
+}
+
 // API key cache
 let apiKey: string | null = null;
 let apiKeyExpiry: number = 0;
@@ -317,7 +336,7 @@ async function fetchMachineStats(machineId: string): Promise<MachineData | null>
       return null;
     }
 
-    const targetDate = new Date().toISOString().split('T')[0];
+    const targetDate = amsterdamDateString();
     
     // Build headers with session cookie if available
     const headers: Record<string, string> = {
@@ -736,8 +755,8 @@ export async function fetchRecentEvents(machineId: string = DEFAULT_MACHINE_ID):
     const endDate = new Date();
     const startDate = new Date(endDate.getTime() - 24 * 60 * 60 * 1000);
     
-    const startDateStr = startDate.toISOString().split('T')[0];
-    const endDateStr = endDate.toISOString().split('T')[0];
+    const startDateStr = amsterdamDateString(startDate);
+    const endDateStr = amsterdamDateString(endDate);
 
     const url = `${EPORTAL_BASE_URL}/events?apiKey=${key}&rvms=${machineId}&startDate=${startDateStr}&endDate=${endDateStr}`;
     
