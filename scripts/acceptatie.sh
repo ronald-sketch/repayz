@@ -42,7 +42,17 @@ VERBODEN_TIJD='10:00 ?- ?21:00|10:00-18:00|10:00 - 18:00|07:00 tot 22:00|10:00-2
 VERBODEN_TELEFOON='12345678|XXX-XXXXXX'
 
 ROUTES_NL="/ /locatie /hoe-het-werkt /faq /statiegeld-inleveren /statiegeld-nederland /statiegeld-udenhout /statiegeld-tilburg /vinted-locker-boxtel"
-ROUTES_INT="/en /en-tilburg /pl /pl-tilburg /ro-boxtel /ua-den-bosch"
+# Na de consolidatie zijn dit de vijf overgebleven taalpagina's.
+ROUTES_INT="/en /ro /pl /bg /ua"
+
+# De 19 URL's die naar een van die vijf moeten doorverwijzen (301).
+declare -A SAMENGEVOEGD=(
+  ["/en-oisterwijk"]="/en"  ["/en-tilburg"]="/en"  ["/en-boxtel"]="/en"  ["/en-den-bosch"]="/en"
+  ["/ro-oisterwijk"]="/ro"  ["/ro-tilburg"]="/ro"  ["/ro-boxtel"]="/ro"  ["/ro-den-bosch"]="/ro"
+  ["/pl-oisterwijk"]="/pl"  ["/pl-tilburg"]="/pl"  ["/pl-boxtel"]="/pl"  ["/pl-den-bosch"]="/pl"
+  ["/bg-oisterwijk"]="/bg"  ["/bg-tilburg"]="/bg"  ["/bg-boxtel"]="/bg"  ["/bg-den-bosch"]="/bg"
+  ["/ua-oisterwijk"]="/ua"  ["/ua-tilburg"]="/ua"  ["/ua-boxtel"]="/ua"  ["/ua-den-bosch"]="/ua"
+)
 
 echo "==============================================================="
 echo " REPAYZ acceptatietest"
@@ -110,7 +120,7 @@ for r in $ROUTES_INT; do
 done
 
 echo "  -- wederkerigheid --"
-for r in /en /pl /en-tilburg /pl-tilburg /ro-boxtel; do
+for r in $ROUTES_INT; do
   html="$(haal "${BASIS}${r}")"
   zelf="${BASIS}${r}"
   # verwijst de pagina naar zichzelf?
@@ -241,6 +251,42 @@ while IFS= read -r u; do
   fi
 done <<<"$steek"
 [ "$dood" -eq 0 ] && groen "alle gecontroleerde sitemap-URL's geven 200"
+
+kop "12. De samengevoegde URL's geven een 301 naar de juiste pagina"
+# Verdwenen URL's moeten doorverwijzen, niet 404'en. Anders gooi je weg wat
+# Google er eventueel aan waarde aan had toegekend.
+for van in "${!SAMENGEVOEGD[@]}"; do
+  naar="${SAMENGEVOEGD[$van]}"
+  st="$(curl -sS -o /dev/null --max-time 25 -A "$UA" -w "%{http_code}" "${BASIS}${van}" 2>/dev/null)"
+  loc="$(curl -sSI --max-time 25 -A "$UA" "${BASIS}${van}" 2>/dev/null \
+    | grep -i '^location:' | tail -1 | sed 's/^[Ll]ocation:[[:space:]]*//' | tr -d '\r')"
+  doel="${BASIS}${naar}"
+  if [ "$st" = "301" ] && { [ "$loc" = "$doel" ] || [ "$loc" = "$naar" ]; }; then
+    groen "$van -> 301 -> $naar"
+  else
+    rood "$van" "301 naar $naar" "status $st, location ${loc:-geen}"
+  fi
+done
+
+kop "13. De samengevoegde URL's staan niet meer in de sitemap"
+inmap=0
+for van in "${!SAMENGEVOEGD[@]}"; do
+  if grep -q "<loc>[^<]*${van}</loc>" <<<"$sm"; then
+    rood "sitemap bevat nog $van" "niet aanwezig" "staat er nog in"
+    inmap=$((inmap+1))
+  fi
+done
+[ "$inmap" -eq 0 ] && groen "geen samengevoegde URL's meer in de sitemap"
+
+kop "14. Elke URL in de sitemap heeft een lastmod"
+zonder="$(grep -o '<url>.*\?</url>' <<<"$sm" >/dev/null 2>&1; \
+  awk '/<url>/{u=""} {u=u$0} /<\/url>/{ if (u !~ /lastmod/) { match(u, /<loc>[^<]*<\/loc>/); print substr(u, RSTART+5, RLENGTH-11) } }' <<<"$sm")"
+n="$(printf '%s' "$zonder" | grep -c . || true)"
+if [ "$n" -eq 0 ]; then
+  groen "alle sitemap-URL's hebben een lastmod"
+else
+  rood "sitemap-URL's zonder lastmod" "0" "$n: $(printf '%s' "$zonder" | tr '\n' ' ')"
+fi
 
 # ================================================================== uitkomst
 echo
