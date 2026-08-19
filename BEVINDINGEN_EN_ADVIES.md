@@ -1,5 +1,11 @@
 # REPAYZ — Bevindingen en advies
 
+> **Status per 19 augustus 2026.** De SEO- en feitenbevindingen uit dit document zijn
+> opgelost en geverifieerd tegen productie (acceptatietest: 104 goed, 0 fout). Wat nog
+> openstaat zit in `DIEPGAAND_ONDERZOEK.md`: de ePortal-credentials in de querystring, de
+> twee bronnen onder de levenstellers, GA4 dat voor toestemming laadt, en de gamification.
+> Dit document beschrijft de situatie zoals aangetroffen, niet de huidige.
+
 **Datum:** 18 augustus 2026
 **Repo:** `ronald-sketch/repayz`, branch `claude/new-session-2z19uv`, HEAD `1c3c48f`
 **Voorloper:** `AUDIT_BREED_2026-08-18.md` (volledige audit op `ea75d46`, 47 bevindingen)

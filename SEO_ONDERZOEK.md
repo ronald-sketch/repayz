@@ -1,5 +1,11 @@
 # REPAYZ — SEO en indexering
 
+> **Status per 19 augustus 2026: de bevindingen S1 tot en met S8 zijn opgelost en
+> geverifieerd tegen productie.** De acceptatietest gaf 104 goed en 0 fout, inclusief de
+> consolidatie van de internationale set van 24 naar 5 URL's. Dit document blijft staan als
+> verantwoording van wat er is gevonden en waarom — niet als beschrijving van de huidige
+> toestand. Draai `bash scripts/acceptatie.sh` voor de actuele stand.
+
 **Datum:** 19 augustus 2026
 **Code:** `ronald-sketch/repayz`, branch `claude/new-session-2z19uv`, HEAD `230279f`
 
