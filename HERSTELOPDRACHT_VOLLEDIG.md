@@ -1,3 +1,20 @@
+> ## AFGEHANDELD — meting 25 augustus 2026, 07:55 UTC
+>
+> De acceptatietest tegen productie geeft **103 goed, 1 fout**. Het herstel is klaar:
+> sitemap op 86 URL's met `lastmod` van vandaag, alle twintig redirects op 301,
+> `/ro` `/bg` `/ua` op 200 met zeven wederkerige hreflang-tags, server-side rendering,
+> canonicals, `lang`, JSON-LD en de bedrijfsfeiten allemaal groen.
+>
+> De verwachting in deel A3 dat de secties 12, 13 en 14 rood zouden zijn, klopte niet.
+> Ze zijn groen. **Deel C hoeft niet meer uitgevoerd te worden.**
+>
+> Eén nieuwe fout, die niet uit de rollback komt maar uit de migratie: onbekende
+> routes geven **503 in plaats van 404**. Zie `OPDRACHT_404_NA_MIGRATIE.md`.
+>
+> Wat wél nog staat: **deel H**. Het server-side werk hoort in de repo.
+
+---
+
 # Herstelopdracht — alles wat er sinds 18 augustus is gedaan
 
 **Voor:** Manus
