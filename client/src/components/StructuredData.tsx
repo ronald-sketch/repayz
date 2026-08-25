@@ -1,4 +1,12 @@
 // @ts-nocheck
+import {
+  ADDRESS,
+  CONTACT,
+  DEPOSIT,
+  GEO,
+  OPENING_HOURS,
+  SCOOTERPOINT,
+} from "@shared/facts";
 import { useEffect } from "react";
 
 interface StructuredDataProps {
@@ -58,24 +66,26 @@ export const localBusinessSchema = {
     "Statiegeld inzamelpunt in Oisterwijk. Breng je lege flessen en blikjes, ontvang cash of doneer aan Sociaal Huis Oisterwijk.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Sprendlingenstraat 20B",
-    addressLocality: "Oisterwijk",
-    postalCode: "5061 KE",
-    addressCountry: "NL",
+    streetAddress: ADDRESS.street,
+    addressLocality: ADDRESS.city,
+    postalCode: ADDRESS.postalCode,
+    addressCountry: ADDRESS.country,
   },
   geo: {
     "@type": "GeoCoordinates",
-    latitude: 51.5783, // Update with actual coordinates
-    longitude: 5.1889,
+    latitude: GEO.latitude,
+    longitude: GEO.longitude,
   },
   url: "https://repayz.nl",
-  telephone: "+31-XXX-XXXXXX", // Update with actual phone
+  // telephone wordt weggelaten zolang CONTACT.telephone niet bevestigd is;
+  // hier stond eerder een plaatshouder-nummer in gepubliceerde JSON-LD.
+  ...(CONTACT.telephone ? { telephone: CONTACT.telephone } : {}),
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "10:00",
-      closes: "18:00",
+      dayOfWeek: OPENING_HOURS.schemaDays,
+      opens: OPENING_HOURS.opens,
+      closes: OPENING_HOURS.closes,
     },
   ],
   priceRange: "Free",
@@ -141,7 +151,7 @@ export const faqPageSchema = {
       name: "Wat zijn de openingstijden?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "De REPAYZ machine is dagelijks beschikbaar van 10:00 tot 21:00 uur, 7 dagen per week. Scooterpoint (op dezelfde locatie) is open dinsdag t/m zaterdag van 10:00 tot 18:00 uur. Maandag en zondag gesloten.",
+        text: `De REPAYZ machine is dagelijks beschikbaar van ${OPENING_HOURS.opens} tot ${OPENING_HOURS.closes} uur, 7 dagen per week. ${SCOOTERPOINT.name} (op dezelfde locatie, ander bedrijf) is open dinsdag t/m zaterdag van ${SCOOTERPOINT.opens} tot ${SCOOTERPOINT.closes} uur. Maandag en zondag gesloten.`,
       },
     },
   ],
@@ -172,7 +182,7 @@ export const statiegeldProductSchema = {
       "@type": "Offer",
       name: "Klein Statiegeld (tot 1L)",
       description: "Statiegeld voor kleine flessen en blikjes tot 1 liter",
-      price: "0.15",
+      price: DEPOSIT.smallBottleNumeric,
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
     },
@@ -180,7 +190,7 @@ export const statiegeldProductSchema = {
       "@type": "Offer",
       name: "Groot Statiegeld (1L+)",
       description: "Statiegeld voor grote flessen vanaf 1 liter",
-      price: "0.25",
+      price: DEPOSIT.largeBottleNumeric,
       priceCurrency: "EUR",
       availability: "https://schema.org/InStock",
     },

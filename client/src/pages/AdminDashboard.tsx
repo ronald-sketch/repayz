@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { CONTACT, OPENING_HOURS } from "@shared/facts";
 import { useState, useEffect } from "react";
 import { useSEO } from "@/hooks/useSEO";
 import { Button } from "@/components/ui/button";
@@ -497,7 +498,7 @@ export default function AdminDashboard() {
                     value={content.settings.whatsappNumber}
                     onChange={(e) => updateContent("settings.whatsappNumber", e.target.value)}
                     className="mt-2"
-                    placeholder="+31 6 12345678"
+                    placeholder={CONTACT.whatsappDisplay}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -510,7 +511,7 @@ export default function AdminDashboard() {
                       value={content.settings.openingHoursStart}
                       onChange={(e) => updateContent("settings.openingHoursStart", e.target.value)}
                       className="mt-2"
-                      placeholder="10:00"
+                      placeholder={OPENING_HOURS.opens}
                     />
                   </div>
                   <div>
@@ -522,7 +523,7 @@ export default function AdminDashboard() {
                       value={content.settings.openingHoursEnd}
                       onChange={(e) => updateContent("settings.openingHoursEnd", e.target.value)}
                       className="mt-2"
-                      placeholder="21:00"
+                      placeholder={OPENING_HOURS.closes}
                     />
                   </div>
                 </div>
@@ -802,7 +803,7 @@ export default function AdminDashboard() {
                         value={popupConfig.openingHours}
                         onChange={(e) => updatePopupConfig('openingHours', e.target.value)}
                         className="mt-2"
-                        placeholder="10:00 - 21:00"
+                        placeholder={OPENING_HOURS.range}
                       />
                     </div>
                   </div>

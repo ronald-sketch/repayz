@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import CityDropdown from "./CityDropdown";
 import { useOpeningHours } from "@/hooks/useOpeningHours";
+import { OPENING_HOURS } from "@shared/facts";
 
 export default function Header() {
   const { data: machineStatus } = trpc.machine.getStatus.useQuery(
@@ -111,7 +112,7 @@ export default function Header() {
             {/* Opening Hours */}
             <div className="text-xs text-[#1a3a52] dark:text-white/80 font-medium text-center md:text-right">
               <div className="font-semibold">Openingstijden</div>
-              <div>Dagelijks: 10:00 - 21:00</div>
+              <div>Dagelijks: {OPENING_HOURS.range}</div>
               <div className={`text-xs font-semibold flex items-center justify-end gap-1 ${openingHours.statusColor}`}>
                 <Clock className="w-3 h-3" />
                 {openingHours.statusText}

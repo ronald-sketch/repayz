@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { OPENING_HOURS } from "@shared/facts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shirt, Recycle, TrendingUp, Heart, Package, Clock } from "lucide-react";
@@ -217,7 +218,7 @@ export default function Vinted() {
                       <div className="flex items-center justify-center gap-3 text-gray-700 dark:text-gray-100">
                         <Clock className="w-5 h-5 text-[#4db8a8]" />
                         <span className="font-semibold">Openingstijden:</span>
-                        <span>10:00 - 21:00 (dagelijks)</span>
+                        <span>{OPENING_HOURS.range} (dagelijks)</span>
                       </div>
                       <div className="mt-6">
                         <Link href="/locatie">

@@ -4,6 +4,7 @@ import { X, Sparkles, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 import { trpc } from '@/lib/trpc';
+import { OPENING_HOURS } from '@shared/facts';
 
 // Popup configuration - editable settings
 export interface PopupConfig {
@@ -72,7 +73,7 @@ const defaultConfig: PopupConfig = {
   description2: 'Help ons verbeteren en test de',
   highlight2: 'snelste statiegeld machine',
   openingHoursLabel: 'Openingstijden',
-  openingHours: '10:00 - 21:00',
+  openingHours: OPENING_HOURS.range,
   primaryButtonText: 'Kom Langs',
   primaryButtonLink: '/locatie',
   secondaryButtonText: 'Later',

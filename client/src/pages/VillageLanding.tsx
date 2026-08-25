@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, OPENING_HOURS, SCOOTERPOINT } from "@shared/facts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Clock, ArrowRight, Navigation, Phone, ParkingCircle, Zap, Users, CheckCircle } from "lucide-react";
@@ -71,7 +72,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
     },
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Sprendlingenstraat 20B",
+      "streetAddress": ADDRESS.street,
       "addressLocality": "Oisterwijk",
       "postalCode": "5061 KN",
       "addressCountry": "NL"
@@ -81,7 +82,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
       "latitude": "51.5789",
       "longitude": "5.1892"
     },
-    "openingHours": "Tu-Sa 10:00-18:00",
+    "openingHours": OPENING_HOURS.schema,
     "paymentAccepted": "Tikkie"
   };
 
@@ -329,7 +330,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
               <CardContent className="p-6">
                 <MapPin className="w-12 h-12 text-[#4db8a8] mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-[#1a3a52] dark:text-white mb-2">Adres</h3>
-                <p className="text-lg font-semibold text-[#1a3a52] dark:text-white">Sprendlingenstraat 20B</p>
+                <p className="text-lg font-semibold text-[#1a3a52] dark:text-white">{ADDRESS.street}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">5061 KN Oisterwijk</p>
               </CardContent>
             </Card>
@@ -357,7 +358,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
                   grote hoeveelheden statiegeld zonder sjouwen!
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <strong>Adres:</strong> Sprendlingenstraat 20B, 5061 KN Oisterwijk
+                  <strong>Adres:</strong> {ADDRESS.full}
                 </p>
               </CardContent>
             </Card>
@@ -440,7 +441,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
                 <div className="space-y-4 text-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-[#1a3a52] dark:text-white">Alle dagen</span>
-                    <span className="text-[#4db8a8] font-bold">10:00 - 21:00</span>
+                    <span className="text-[#4db8a8] font-bold">{OPENING_HOURS.range}</span>
                   </div>
                 </div>
               </CardContent>
@@ -455,7 +456,7 @@ export default function VillageLanding({ village, faqs }: VillageLandingProps) {
                 <div className="space-y-4 text-lg">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-[#1a3a52] dark:text-white">Dinsdag - Zaterdag</span>
-                    <span className="text-[#4db8a8] font-bold">10:00 - 18:00</span>
+                    <span className="text-[#4db8a8] font-bold">{SCOOTERPOINT.range}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="font-semibold text-[#1a3a52] dark:text-white">Maandag & Zondag</span>

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS } from "@shared/facts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEOHead } from "@/components/SEOHead";
@@ -143,7 +144,7 @@ export default function Privacy() {
             <div className="mt-4 p-4 bg-[#4db8a8]/10 rounded-lg">
               <p className="text-gray-700 dark:text-gray-200 m-0">
                 <strong>REPAYZ</strong><br />
-                Sprendlingenstraat 20B<br />
+                {ADDRESS.street}<br />
                 5061 KN Oisterwijk<br />
                 E-mail: <a href="mailto:info@repayz.nl" className="text-[#4db8a8] hover:underline">info@repayz.nl</a>
               </p>

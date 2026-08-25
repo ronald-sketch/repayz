@@ -13,8 +13,16 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true as const,
   };
 
+  // vite.config.ts exporteert sinds de plugin-splitsing een functie, zodat
+  // het Manus-bouwgereedschap alleen in development wordt geladen. Een spread
+  // van een functie levert een lege config op, dus eerst uitvoeren.
+  const resolvedConfig =
+    typeof viteConfig === "function"
+      ? await viteConfig({ command: "serve", mode: "development" })
+      : viteConfig;
+
   const vite = await createViteServer({
-    ...viteConfig,
+    ...resolvedConfig,
     configFile: false,
     server: serverOptions,
     appType: "custom",

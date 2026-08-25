@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, OPENING_HOURS } from "@shared/facts";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { MapPin, Clock, Navigation, Package } from "lucide-react";
@@ -50,18 +51,18 @@ export default function InternationalLanding({ language, city, translations: t }
 
   const mapEmbedUrls = {
     "oisterwijk": `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2487.5!2d5.1897!3d51.5789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTHCsDM0JzQ0LjAiTiA1wrAxMScyMy4wIkU!5e0!3m2!1sen!2snl!4v1234567890!5m2!1sen!2snl`,
-    "tilburg": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=Tilburg,Netherlands&destination=Sprendlingenstraat+20B,5061+KN+Oisterwijk,Netherlands`,
-    "boxtel": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=Boxtel,Netherlands&destination=Sprendlingenstraat+20B,5061+KN+Oisterwijk,Netherlands`,
-    "den-bosch": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=s-Hertogenbosch,Netherlands&destination=Sprendlingenstraat+20B,5061+KN+Oisterwijk,Netherlands`
+    "tilburg": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=Tilburg,Netherlands&destination=${ADDRESS.urlEncoded},Netherlands`,
+    "boxtel": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=Boxtel,Netherlands&destination=${ADDRESS.urlEncoded},Netherlands`,
+    "den-bosch": `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=s-Hertogenbosch,Netherlands&destination=${ADDRESS.urlEncoded},Netherlands`
   };
 
   // SEO meta descriptions per language
   const seoDescriptions = {
-    en: `Recycle bottles and cans at REPAYZ in ${cityNames[city]}. Get paid cash via Tikkie or support local welfare. Open daily 10:00-21:00.`,
-    ro: `Reciclează sticle și doze la REPAYZ în ${cityNames[city]}. Primește bani cash prin Tikkie sau susține bunăstarea locală. Deschis zilnic 10:00-21:00.`,
-    pl: `Oddaj butelki i puszki w REPAYZ w ${cityNames[city]}. Otrzymaj gotówkę przez Tikkie lub wesprzyj lokalną pomoc społeczną. Otwarte codziennie 10:00-21:00.`,
-    bg: `Рециклирайте бутилки и кутии в REPAYZ в ${cityNames[city]}. Получете пари в брой чрез Tikkie или подкрепете местното благосъстояние. Отворено ежедневно 10:00-21:00.`,
-    ua: `Здайте пляшки та банки в REPAYZ у ${cityNames[city]}. Отримайте готівку через Tikkie або підтримайте місцеве благополуччя. Відкрито щодня 10:00-21:00.`
+    en: `Recycle bottles and cans at REPAYZ in ${cityNames[city]}. Get paid cash via Tikkie or support local welfare. Open daily ${OPENING_HOURS.range}.`,
+    ro: `Reciclează sticle și doze la REPAYZ în ${cityNames[city]}. Primește bani cash prin Tikkie sau susține bunăstarea locală. Deschis zilnic ${OPENING_HOURS.range}.`,
+    pl: `Oddaj butelki i puszki w REPAYZ w ${cityNames[city]}. Otrzymaj gotówkę przez Tikkie lub wesprzyj lokalną pomoc społeczną. Otwarte codziennie ${OPENING_HOURS.range}.`,
+    bg: `Рециклирайте бутилки и кутии в REPAYZ в ${cityNames[city]}. Получете пари в брой чрез Tikkie или подкрепете местното благосъстояние. Отворено ежедневно ${OPENING_HOURS.range}.`,
+    ua: `Здайте пляшки та банки в REPAYZ у ${cityNames[city]}. Отримайте готівку через Tikkie або підтримайте місцеве благополуччя. Відкрито щодня ${OPENING_HOURS.range}.`
   };
 
   return (
@@ -103,7 +104,7 @@ export default function InternationalLanding({ language, city, translations: t }
                     <div>
                       <h3 className="font-bold text-lg mb-2 dark:text-white">{t.address}</h3>
                       <p className="text-gray-600 dark:text-gray-300">
-                        Sprendlingenstraat 20B<br />
+                        {ADDRESS.street}<br />
                         5061 KN Oisterwijk<br />
                         Netherlands
                       </p>

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ADDRESS, OPENING_HOURS } from "@shared/facts";
 import { MapPin } from "lucide-react";
 import { APP_LOGO, APP_TITLE } from "@/const";
 import { Link } from "wouter";
@@ -13,10 +14,10 @@ export default function Locatie() {
       {/* SEO Meta Tags */}
       <SEOHead 
         title="REPAYZ Locatie Oisterwijk - Adres, Openingstijden & Routebeschrijving"
-        description="Vind de REPAYZ recycling machine in Oisterwijk. Bekijk ons adres, openingstijden (dagelijks 10:00-21:00) en routebeschrijving. Lever je flessen en blikjes in bij onze Envipco Quantum machine."
+        description={`Vind de REPAYZ recycling machine in Oisterwijk. Bekijk ons adres, openingstijden (${OPENING_HOURS.daily}) en routebeschrijving. Lever je flessen en blikjes in bij onze Envipco Quantum machine.`}
         keywords="REPAYZ locatie, REPAYZ Oisterwijk adres, recycling machine Oisterwijk, openingstijden REPAYZ, statiegeld inleveren Oisterwijk centrum"
         ogTitle="REPAYZ Locatie - Oisterwijk Centrum"
-        ogDescription="Bezoek REPAYZ in Oisterwijk centrum. Dagelijks 10:00-21:00. Lever je flessen en blikjes in en ontvang direct statiegeld!"
+        ogDescription={`Bezoek REPAYZ in Oisterwijk centrum. Dagelijks ${OPENING_HOURS.range}. Lever je flessen en blikjes in en ontvang direct statiegeld!`}
         canonicalUrl="https://repayz.nl/locatie"
       />
       <BreadcrumbsSchema items={[
@@ -37,7 +38,7 @@ export default function Locatie() {
               Waar vind je REPAYZ?
             </h1>
             <p className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
-              Sprendlingenstraat 20B
+              {ADDRESS.street}
             </p>
             <p className="text-xl text-gray-600 dark:text-gray-300">
               5061 KN Oisterwijk
@@ -60,7 +61,7 @@ export default function Locatie() {
                   marginWidth={0}
                   src="https://www.openstreetmap.org/export/embed.html?bbox=5.1845%2C51.5795%2C5.2045%2C51.5895&layer=mapnik&marker=51.5845%2C5.1945"
                   style={{ border: 0 }}
-                  title="REPAYZ Oisterwijk - Sprendlingenstraat 20B"
+                  title={`REPAYZ Oisterwijk - ${ADDRESS.street}`}
                 />
               </div>
 
@@ -70,13 +71,13 @@ export default function Locatie() {
               <div className="absolute bottom-0 left-0 right-0 bg-white/95 dark:bg-[#1a2f3f]/95 backdrop-blur-sm p-6 border-t border-gray-200 dark:border-gray-700">
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-navy-900 dark:text-white mb-2">
-                    📍 Sprendlingenstraat 20B
+                    📍 {ADDRESS.street}
                   </h3>
                   <p className="text-lg text-gray-700 dark:text-gray-200 mb-2">
                     5061 KN Oisterwijk
                   </p>
                   <p className="text-sm text-[#4db8a8] dark:text-[#4db8a8] font-semibold">
-                    dagelijks open van 10:00 tot 21:00
+                    dagelijks open van {OPENING_HOURS.opens} tot {OPENING_HOURS.closes}
                   </p>
                 </div>
               </div>
