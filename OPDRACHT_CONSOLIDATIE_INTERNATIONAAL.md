@@ -2,15 +2,53 @@
 
 **Voor:** de bouwer van repayz.nl
 **Van:** Ronald
-**Datum:** 19 augustus 2026
+**Datum:** 25 augustus 2026 (tweede uitgifte)
 **Omvang:** 20 URL's samenvoegen tot 5. Raakt niets buiten de internationale set.
+
+---
+
+## Lees dit eerst — dit werk was al af
+
+Dit is geen nieuw verzoek. Dit werk is eerder opgeleverd en gemeten: de
+acceptatietest gaf **104 goed, 0 fout**. Door een mislukte back-up is de publicatie
+teruggezet naar een checkpoint van woensdag, en dat checkpoint ligt vóór dit werk.
+De sitemap staat weer op ruim 100 URL's in plaats van de samengevoegde toestand.
+
+Wat dat betekent voor jou:
+
+- **Begin met meten, niet met bouwen.** Draai eerst `bash scripts/acceptatie.sh` en
+  bewaar de uitvoer. Die vertelt precies wat de rollback wél en niet heeft geraakt.
+  Mogelijk staat een deel van het werk er nog.
+- **Herstel alleen wat rood is.** Groene secties niet aanraken.
+- **De test is ongewijzigd en bevat geen harde aantallen.** Hij staat in git op branch
+  `claude/new-session-2z19uv` en is door de rollback niet geraakt.
+
+### Eén ding met voorrang: controleer of `/ro`, `/bg` en `/ua` nu 404 geven
+
+Die drie pagina's zijn aangemaakt en hebben live gestaan. Google kan ze inmiddels
+hebben opgehaald. Geven ze na de rollback een 404, dan voed je Google dode URL's.
+
+```bash
+for r in /ro /bg /ua; do
+  echo -n "$r -> "; curl -sS -o /dev/null -w "%{http_code}\n" "https://repayz.nl$r"
+done
+```
+
+- **200** — ze hebben de rollback overleefd. Prima, ga verder met de meting hierboven.
+- **404** — herstel deze drie als eerste, vóór al het andere in deze opdracht.
+
+Geven de 20 samengevoegde URL's weer 200 in plaats van 301, dan is er géén schade
+ontstaan: Google heeft ze dan gewoon nog. Dat is dus geen spoed, alleen werk dat
+opnieuw moet.
 
 ---
 
 ## Waarom
 
-De sitemap telt 103 URL's. Daarvan zijn er 24 internationaal, en die set heeft drie
-problemen die uit de sitemap alleen al aan te tonen zijn.
+De sitemap telt ruim honderd URL's. Daarvan zijn er 24 internationaal, en die set
+heeft drie problemen die uit de sitemap alleen al aan te tonen zijn. Het exacte totaal
+doet er niet toe en verandert per publicatie — de 24 internationale URL's hieronder
+zijn wat telt.
 
 **Dubbele URL's voor dezelfde inhoud.** `/en` en `/en-oisterwijk` bestaan allebei. `/pl` en
 `/pl-oisterwijk` ook. Dat is letterlijke duplicatie: twee adressen, één pagina.
@@ -151,7 +189,10 @@ moeten 200 zijn.
 - Genereer `lastmod` uit de werkelijke wijzigingsdatum. Een ontbrekende `lastmod` is beter
   dan een verzonnen datum, maar een echte is het beste.
 
-Na afloop telt de sitemap 86 URL's: 103 min 20, plus /ro, /bg en /ua.
+Na afloop is het totaal: wat er nu staat, min de 20 samengevoegde URL's, plus `/ro`,
+`/bg` en `/ua` voor zover die er nog niet in staan. Reken niet met een vast getal — tel
+vóór en na, en controleer dat het verschil klopt met die regel. De acceptatietest
+controleert de regel, niet het totaal.
 
 ---
 
@@ -180,8 +221,13 @@ bash scripts/acceptatie.sh
 Exitcode 0 en nul fouten. **Publiceer niets en meld niets als klaar zolang de exitcode 1
 is.** Stuur de volledige uitvoer mee bij de oplevering.
 
-Het script staat in de repo op branch `claude/new-session-2z19uv`. Het draait ook tegen een
-testomgeving:
+Het script staat in de repo op branch `claude/new-session-2z19uv`. **Staat het niet in jouw
+werkkopie** — dat kan, de rollback heeft de publicatie teruggezet — dan is `acceptatie.sh`
+als tweede bestand bij deze opdracht meegeleverd. Zet het terug op `scripts/acceptatie.sh`,
+maak het uitvoerbaar, en commit het mee. Het heeft geen dependencies: alleen `curl` en
+`bash`.
+
+Het draait ook tegen een testomgeving:
 
 ```bash
 bash scripts/acceptatie.sh http://localhost:3000
@@ -189,14 +235,20 @@ bash scripts/acceptatie.sh http://localhost:3000
 
 Gebruik dat vóór publicatie in plaats van erna.
 
-**Het script is nu al rood op sectie 12, en dat hoort zo.** Die sectie beschrijft de
-eindtoestand van deze opdracht: elk van de 20 URL's moet 301 geven naar het juiste doel.
-Hij wordt groen als het werk af is. De secties 13 en 14 controleren de sitemap.
+**Verwacht dat er nu meerdere secties rood zijn**, en gebruik dat als je werklijst:
 
-De overige elf secties waren bij de laatste meting groen — canonical, hreflang,
-taalattribuut, server-side content, 404-afhandeling, de bedrijfsfeiten, de JSON-LD en de
-interne links. **Die moeten groen blijven.** Als er iets omvalt door deze wijziging, is dat
-een regressie en geen bijkomstigheid.
+| Sectie | Wat rood betekent |
+|---|---|
+| **12** — de 20 URL's geven 301 | De samenvoeging is teruggedraaid. Kern van deze opdracht. |
+| **6** — hreflang wederkerig | De zeven-tags-set uit taak 3 is weg of terug naar de oude opzet. |
+| **13, 14** — sitemap | De samengevoegde URL's staan er weer in, of `lastmod` ontbreekt. |
+| **3, 4, 5** — canonical, inhoud in de HTML, `lang` | De server-side rendering is meegegaan. Dit is de ernstigste categorie: dan krijgt een crawler weer een leeg React-omhulsel. Herstel dit vóór de samenvoeging. |
+| **7, 8** — bedrijfsfeiten, JSON-LD | Er is een verboden adres- of openingstijdvariant teruggekeerd. |
+
+Bij de laatste geslaagde meting waren alle veertien secties groen: 104 goed, 0 fout.
+Dat is het doel, en het is aantoonbaar haalbaar — het is eerder gehaald. **Wat groen is,
+moet groen blijven.** Als er iets omvalt door deze wijziging, is dat een regressie en
+geen bijkomstigheid.
 
 ---
 
@@ -223,7 +275,8 @@ openingstijden. Die regels moeten expliciet als Scooterpoint gelabeld zijn.
 
 ## Volgorde
 
-1. `/ro`, `/bg`, `/ua` aanmaken en op 200 krijgen.
+0. `bash scripts/acceptatie.sh` draaien en de uitvoer bewaren. Dat is je nulmeting.
+1. `/ro`, `/bg`, `/ua` aanmaken en op 200 krijgen (of herstellen als ze 404 geven).
 2. De hreflang-set uit taak 3 op alle zes de pagina's zetten.
 3. Pas dán de 20 redirects aanzetten. Andersom verwijs je even naar pagina's die nog niet
    bestaan.
