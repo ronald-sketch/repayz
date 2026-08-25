@@ -69,6 +69,54 @@ instelling. Dit is een vermoeden, geen vaststelling.
 
 ---
 
+## Aanvulling 25 augustus, 09:45 — de klant kan dit niet zelf ondervangen
+
+Er is geprobeerd de 503 aan klantzijde te onderscheppen met een Cloudflare Worker.
+Dat werkt niet, en dat is zelf een bevinding.
+
+**Wat er is gedaan.** Een Worker (`repayz-status-herstel`) is uitgerold op het
+Cloudflare-account van de domeinhouder en gekoppeld aan de route `repayz.nl/*`. De
+Worker zet de status uit `x-manus-original-status` terug en verwijdert de
+`retry-after`.
+
+**Wat er is gemeten.**
+
+```
+HTTP/1.1 503 Service Unavailable
+Retry-After: 216000
+X-Manus-Original-Status: 404
+Server: cloudflare
+CF-RAY: a309aa020c26cd17-AMS
+```
+
+De eigen header van de Worker, `x-status-hersteld-door`, ontbreekt. De Worker draait
+dus niet, terwijl:
+
+| Gecontroleerd | Stand |
+|---|---|
+| Worker uitgerold | ja — `Deployed repayz-status-herstel triggers` |
+| Route aanwezig | ja — `repayz.nl/*` -> `repayz-status-herstel`, 1 van 1 |
+| DNS-record `repayz.nl` | A -> `104.18.26.246`, **Proxied** |
+
+**De verklaring.** Dat IP-adres is geen server van Manus maar een adres van Cloudflare
+zelf. De opzet is dus *orange-to-orange*: twee Cloudflare-lagen achter elkaar. Daarbij
+wordt het verzoek aan de rand doorgegeven aan de zone van de aanbieder, en worden
+instellingen van de bovenliggende zone grotendeels overgeslagen — Workers daaronder.
+
+Dit is een gevolgtrekking uit de drie waarnemingen hierboven, geen mededeling van
+Cloudflare. Maar de uitkomst staat vast: **een Worker aan klantzijde krijgt het
+verzoek niet te zien.**
+
+**Wat dat betekent.** Er is geen ingreep aan klantzijde mogelijk. De 503 kan alleen
+worden weggenomen in de laag die `x-manus-original-status` zet — en die staat bij
+Manus. Dit is dus geen kwestie van meedenken maar van uitvoeren aan hun kant.
+
+De Worker blijft uitgerold en gekoppeld. Hij kost niets zolang hij wordt overgeslagen,
+en hij grijpt alleen in bij een 503 met die header. Verandert de opzet ooit, dan werkt
+hij vanzelf.
+
+---
+
 ## Wat er hersteld moet worden
 
 Eén ding: **laat de oorspronkelijke statuscode door.** Geeft de applicatie 404, dan
