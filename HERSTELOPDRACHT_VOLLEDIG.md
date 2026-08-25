@@ -3,9 +3,13 @@
 **Voor:** Manus
 **Van:** Ronald
 **Datum:** 25 augustus 2026
-**Aanleiding:** een mislukte back-up heeft de publicatie teruggezet naar het
-Manus-checkpoint van **woensdag 19 augustus, 20:30**. Alles wat daarna is gepubliceerd,
-is uit de lucht.
+**Aanleiding:** Manus heeft een gegevensmigratie moeten uitvoeren op grond van
+overheidsregels. Daarbij is de publicatie teruggezet naar het checkpoint van
+**woensdag 19 augustus, 20:30**. Er was geen onafhankelijke back-up van de staat
+daarna, dus alles wat na dat moment is gepubliceerd, is uit de lucht.
+
+Dit is geen verwijt en vraagt geen verklaring. Het is een gegeven waar deze opdracht
+mee begint.
 
 ---
 
@@ -456,10 +460,64 @@ test groen is, betekent dat de techniek klopt — niet dat de index al is bijgew
 
 ---
 
-# Nog één ding: voorkom dat dit nog eens gebeurt
+# DEEL H — Zorg dat een volgende migratie niets meer kost
 
-Al het werk uit deel C is verloren gegaan omdat het alleen in de publicatie stond en
-niet in git. Het werk uit deel B is niet verloren gegaan, om precies die reden.
+Deze rollback heeft het werk uit deel C gekost en het werk uit deel B niet. Het
+verschil zat niet in hoe belangrijk het was of hoe goed er is opgelet. Het zat in
+één ding:
 
-**Zet het server-side werk in de repo**, op branch `claude/new-session-2z19uv`. Dan is
-een volgende rollback een ongemak in plaats van een week opnieuw doen.
+> **Wat in git stond, staat er nog. Wat alleen in de publicatie stond, is weg.**
+
+Een gegevensmigratie op de bouwomgeving is niets bijzonders en zal nog eens gebeuren.
+De vraag is niet hoe je dat voorkomt — dat kun je niet — maar hoe je zorgt dat het de
+volgende keer een half uur kost in plaats van een week.
+
+## H1. Zet het server-side werk in de repo
+
+Dit is de enige maatregel die er echt toe doet.
+
+De 301-redirects, de server-side rendering, de hreflang-generatie en de
+sitemapgeneratie bestaan nu alleen als publicatiestaat. Zet ze als code op branch
+`claude/new-session-2z19uv`. Dan geldt voor dat werk hetzelfde als voor deel B: een
+migratie raakt het niet, en herstellen is een merge in plaats van opnieuw bouwen.
+
+Concreet, ergens in het serverdeel van de repo:
+
+- de redirecttabel uit C3 als data, niet als losse regels
+- de hreflang-set uit C2 op één plaats, zoals `shared/facts.ts` dat voor de
+  bedrijfsfeiten doet
+- de sitemapgeneratie als script, zodat de sitemap uit de routes volgt en niet
+  handmatig wordt bijgehouden
+
+## H2. Commit voordat je publiceert, niet erna
+
+De volgorde die dit probleem had voorkomen:
+
+```
+werken  ->  acceptatie.sh tegen localhost  ->  commit + push  ->  publiceren
+```
+
+Niet andersom. De publicatie is dan een afgeleide van git, en git is de waarheid.
+
+## H3. Leg vast wat de live site uitzendt
+
+`scripts/seo-live-check.sh` schrijft precies op wat een crawler op elke route
+terugkrijgt: canonical, hreflang, `lang`, H1, JSON-LD, sitemapaantal. Draai dat na elke
+publicatie en bewaar de uitvoer:
+
+```bash
+bash scripts/seo-live-check.sh > seo-snapshot-$(date +%F).txt
+```
+
+Dat is geen back-up — je kunt de site er niet mee terugzetten. Maar het is wél een
+verschilbaar verslag: bij een volgende rollback zie je in één `diff` wat er is
+veranderd, in plaats van het opnieuw te moeten uitzoeken.
+
+## H4. Voor Ronald: waar het werk nu staat
+
+Alles staat op GitHub, `ronald-sketch/repayz`, branch `claude/new-session-2z19uv`. Dat
+is de enige plaats waar het werk van deze week volledig bewaard is gebleven — de
+rapporten, de testen, de bedrijfsfeitenbron en de acceptatietest.
+
+Raakt de Manus-omgeving nog eens iets kwijt, dan is dat de plek om te beginnen. De
+branch is niet afhankelijk van Manus en wordt door een migratie daar niet geraakt.
