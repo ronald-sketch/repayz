@@ -117,6 +117,35 @@ hij vanzelf.
 
 ---
 
+## Sluitstuk 25 augustus, 10:0x — ook op het manus.space-domein zelf
+
+De laatste twijfel is weggenomen door dezelfde niet-bestaande URL op te vragen via het
+Manus-projectdomein, dat de Cloudflare-zone van de domeinhouder volledig overslaat:
+
+```
+curl -sSI https://repayz-recyc-gkymvzzt.manus.space/bestaat-niet-vergelijk
+
+HTTP/1.1 503 Service Unavailable
+Retry-After: 216000
+X-Manus-Original-Status: 404
+```
+
+Zelfde antwoord, zelfde `retry-after`, zelfde bewaarde status.
+
+| Ingang | Antwoord |
+|---|---|
+| `repayz.nl` | 503 + `X-Manus-Original-Status: 404` |
+| `www.repayz.nl` | 301 naar apex, daarna diezelfde 503 |
+| `repayz-recyc-gkymvzzt.manus.space` | 503 + `X-Manus-Original-Status: 404` |
+
+**De onderhoudsstand zit op het project zelf**, niet op de domeinkoppeling, niet op
+Cloudflare en niet op DNS. Elke ingang komt bij dezelfde instelling uit.
+
+Daarmee vervalt elke denkbare ingreep aan klantzijde. Dit kan alleen worden omgezet in
+de Manus-omgeving.
+
+---
+
 ## Wat er hersteld moet worden
 
 Eén ding: **laat de oorspronkelijke statuscode door.** Geeft de applicatie 404, dan
