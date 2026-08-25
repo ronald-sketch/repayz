@@ -290,6 +290,62 @@ else
   rood "sitemap-URL's zonder lastmod" "0" "$n: $(printf '%s' "$zonder" | tr '\n' ' ')"
 fi
 
+# ============================================ 15. taalclusters buiten de wortels
+kop "15. De app-pagina's vormen twee gescheiden, wederkerige taalclusters"
+# Vastgesteld op 25 augustus 2026: dit zijn twee losstaande clusters van drie
+# vertalingen. De vaste pagina's zijn de blijvende uitleg, de blogartikelen de
+# aankondiging. Ze horen NIET naar elkaar te verwijzen -- een pagina hoort bij
+# een cluster. Elk cluster heeft vier tags: drie talen plus x-default.
+CLUSTER_VAST="/statiegeld-app /en/statiegeld-app /pl/aplikacja-statiegeld"
+CLUSTER_BLOG="/blog/statiegeld-app-uitbetaling-tikkie-qr-code-repayz /blog/statiegeld-app-payment-tikkie-coming-soon /blog/aplikacja-statiegeld-tikkie-wkrotce"
+
+controleer_cluster() {
+  naam="$1"; leden="$2"; ander="$3"
+  for r in $leden; do
+    html="$(haal "${BASIS}${r}")"
+    tags="$(grep -o '<link[^>]*hreflang="[^"]*"[^>]*>' <<<"$html")"
+    n="$(printf '%s' "$tags" | grep -c 'hreflang=' || true)"
+    if [ "$n" -eq 4 ]; then
+      groen "$r heeft 4 hreflang-tags ($naam)"
+    else
+      rood "$r hreflang-aantal ($naam)" "4" "$n"
+      continue
+    fi
+
+    doelen="$(grep -o 'href="[^"]*"' <<<"$tags" | sed 's/href="//; s/"//' | sort -u)"
+
+    # zelfverwijzing
+    if grep -q "^${BASIS}${r}$" <<<"$doelen"; then
+      groen "$r noemt zichzelf"
+    else
+      rood "$r zelfverwijzing" "een hreflang-tag naar ${BASIS}${r}" "niet aanwezig"
+    fi
+
+    # geen vermenging met het andere cluster
+    vermengd=""
+    for v in $ander; do
+      grep -q "^${BASIS}${v}$" <<<"$doelen" && vermengd="$vermengd $v"
+    done
+    if [ -z "$vermengd" ]; then
+      groen "$r verwijst niet naar het andere cluster"
+    else
+      rood "$r vermenging van clusters" "geen verwijzing naar het andere cluster" "wijst naar$vermengd"
+    fi
+
+    # alle doelen bestaan
+    stuk=0
+    while IFS= read -r d; do
+      [ -z "$d" ] && continue
+      c="$(code "$d")"
+      [ "$c" != "200" ] && { rood "hreflang-doel $d (genoemd op $r)" "200" "$c"; stuk=$((stuk+1)); }
+    done <<<"$doelen"
+    [ "$stuk" -eq 0 ] && groen "$r: alle hreflang-doelen geven 200"
+  done
+}
+
+controleer_cluster "vaste pagina's" "$CLUSTER_VAST" "$CLUSTER_BLOG"
+controleer_cluster "blogartikelen"  "$CLUSTER_BLOG" "$CLUSTER_VAST"
+
 # ================================================================== uitkomst
 echo
 echo "==============================================================="
